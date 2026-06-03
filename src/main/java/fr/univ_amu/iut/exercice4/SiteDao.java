@@ -72,12 +72,26 @@ public class SiteDao {
         "INSERT INTO site (numero_carre, nom_convivial, protocole, commentaire, date_creation)"
             + " VALUES (?, ?, ?, ?, ?)";
 
+    try (Connection connexion = source.getConnection();
+        PreparedStatement ps = connexion.prepareStatement(sql)) {
+      ps.setString(1, site.numeroCarre());
+      ps.setString(2, site.nomConvivial());
+      ps.setString(3, site.protocole());
+      ps.setString(4, site.commentaire());
+      ps.setString(5, site.dateCreation());
+
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new DataAccessException("Message d'erreur", e);
+    }
+
     // TODO exercice 4 : insérer le site.
     //
     // - ouvrir une connexion + préparer la requête ;
     // - lier les 5 paramètres dans l'ordre des colonnes (setString) ;
     // - exécuter avec executeUpdate() ;
     // - envelopper toute SQLException dans une DataAccessException.
+
   }
 
   /** Met à jour les champs d'un site existant (identifié par son numéro de carré). */
@@ -86,6 +100,19 @@ public class SiteDao {
         "UPDATE site SET nom_convivial = ?, protocole = ?, commentaire = ?, date_creation = ?"
             + " WHERE numero_carre = ?";
 
+    try (Connection connexion = source.getConnection();
+        PreparedStatement ps = connexion.prepareStatement(sql)) {
+      ps.setString(5, site.numeroCarre());
+      ps.setString(1, site.nomConvivial());
+      ps.setString(2, site.protocole());
+      ps.setString(3, site.commentaire());
+      ps.setString(4, site.dateCreation());
+
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new DataAccessException("Message d'erreur", e);
+    }
+
     // TODO exercice 4 : mettre à jour le site (mêmes étapes, executeUpdate).
     // Attention à l'ordre des paramètres : le numero_carre est le DERNIER (clause WHERE).
   }
@@ -93,6 +120,15 @@ public class SiteDao {
   /** Supprime le site identifié par son numéro de carré. */
   public void delete(String numeroCarre) {
     String sql = "DELETE FROM site WHERE numero_carre = ?";
+
+    try (Connection connexion = source.getConnection();
+        PreparedStatement ps = connexion.prepareStatement(sql)) {
+      ps.setString(1, numeroCarre);
+
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new DataAccessException("Message d'erreur", e);
+    }
 
     // TODO exercice 4 : supprimer le site (PreparedStatement + executeUpdate).
   }
