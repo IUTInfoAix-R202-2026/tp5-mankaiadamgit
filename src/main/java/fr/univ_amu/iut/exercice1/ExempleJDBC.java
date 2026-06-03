@@ -66,6 +66,15 @@ public class ExempleJDBC {
   static List<String> lireTaxons(Connection connexion) throws SQLException {
     List<String> lignes = new ArrayList<>();
 
+    try (Statement st = connexion.createStatement();
+        ResultSet rs = st.executeQuery("SELECT code, nom_vernaculaire FROM taxon")) {
+
+      while (rs.next()) {
+
+        lignes.add(rs.getString("code") + " - " + rs.getString("nom_vernaculaire"));
+      }
+    }
+
     // TODO exercice 1 : lire la table taxon.
     //
     // 1. Créer une instruction : connexion.createStatement() (dans un try-with-resources).
